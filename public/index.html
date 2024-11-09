@@ -1,0 +1,110 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actress Voting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .actress {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 10px;
+        }
+        .actress img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .vote-button {
+            margin-top: 1px;
+            padding: 10px 20px;
+            background-color: #f062b54d;
+            color: rgb(248, 0, 62);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .vote-button:hover {
+            background-color: #eea0cb8e;
+        }
+        .vote-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            /* background-image: url('https://img.freepik.com/free-vector/simple-blue-gradient-background-vector-business_53876-169287.jpg?w=2000'); */
+            background-size: cover;
+            background-position: center;
+        }
+        .vote-container div {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+            margin-right: 10px;
+        }
+        /* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap'); */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="actress">
+            <img src="actress1.jpg" alt="Actress 1">
+            <div class="vote-container">
+                <div id="votes-actress1">Votes: 0</div>
+                <button class="vote-button" onclick="vote('actress1')">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+        </div>
+        <div class="actress">
+            <img src="actress2.jpg" alt="Actress 2">
+            <div class="vote-container">
+                <div id="votes-actress2">Votes: 0</div>
+                <button class="vote-button" onclick="vote('actress2')">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function vote(actress) {
+            const response = await fetch(`/vote/${actress}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById(`votes-${actress}`).innerText = ` ${data.votes[actress]}`;
+            }
+        }
+
+        async function getVotes() {
+            const response = await fetch('/votes');
+            const data = await response.json();
+            document.getElementById('votes-actress1').innerText = ` ${data.actress1}`;
+            document.getElementById('votes-actress2').innerText = ` ${data.actress2}`;
+        }
+
+        // Fetch initial votes
+        getVotes();
+    </script>
+</body>
+</html>
